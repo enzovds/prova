@@ -1,0 +1,79 @@
+;_____________________________________________________________________________________
+;						¤ Programa de microcontrolados ¤
+; Programa Fonte
+; Autores: Enzo V.D.Silva, Camilla de Carvalho, Isabella Latocheski, Date: 02/14/2019
+;					
+;							 ¤ ARQUIVO FONTE BASICO ¤
+;_____________________________________________________________________________________
+
+
+;	DEFINIÇÃO DE MICROCONTROLADOR
+		#include <p16f877a.inc>
+    
+;-----------------------------------------------------------------------------------
+;	CONFIGURAÇÃO DOS FUSIVEIS
+;-----------------------------------------------------------------------------------
+	__CONFIG _CP_OFF & _CPD_OFF & _DEBUG_OFF & _LVP_OFF & _WRT_OFF & _BODEN_OFF & _PWRTE_OFF & _WDT_OFF & _HS_OSC
+
+;-----------------------------------------------------------------------------------
+;	DECLARAÇÃO DE VARIAVEIS
+;-----------------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------------
+;	MACROS
+;-----------------------------------------------------------------------------------
+
+
+; declaração das instruções
+	x			equ	.10
+	numeromax	equ	.8
+
+; 				¤INICIO DAS INSTRUÇÕES¤
+
+		org		0x00
+		goto	INICIO
+
+;	CONFIGURAÇÕES INICIAIS DO PIC
+
+INICIO:
+
+		bcf		STATUS,.6
+		bsf		STATUS,.5	;  
+
+		bsf 	TRISC,.4	;  RB4 É ENTRADA / BOTÃO LIGA DESLIGA
+		clrf	TRISD
+
+		bcf		STATUS,.5
+
+; ?? ROTINA PRINCIPAL ??
+
+main:
+		clrf	PORTD
+
+		bcf		PORTC,	.4	; botão em 0
+BOTAO:
+		btfsc	PORTC,.4	; botão está em zero ?
+		goto	LED_LIGA	; ligando os leds
+ 		goto	BOTAO
+
+fim:	goto	fim
+
+; ?? SUB-ROTINAS USADAS ??
+
+
+BOTAOAPERTADO:
+
+LED_LIGA:	
+		movlw	0xCC
+		movwf	PORTD
+		btfsc	PORTC, .4
+		goto	LED_LIGA ; ENQUANTO O BOTAO É PRECIONADO
+		goto	LED_DESLIGA
+
+LED_DESLIGA:	
+		clrf	PORTD
+		goto	BOTAO	 
+
+
+
+end
